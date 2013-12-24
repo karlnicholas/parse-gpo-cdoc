@@ -127,6 +127,7 @@ public class ParseCongress {
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		bWriter.write( writer.writeValueAsString(notes) );
 //		mapper.writeValue(new File("c:/users/karl/downloads/congress.json"), notes);
+		bWriter.close();
 		debugFile.close();
 	}
 	
