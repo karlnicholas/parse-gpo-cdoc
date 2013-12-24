@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,14 +84,19 @@ public class ParseCongress {
 			String footnameText = paragraph.getFootnoteText();
 			if(footnameText != null && footnameText.length() > 0) {
 //				note.footnote = footnameText;
-				String[] splits = footnameText.split("\\[[0-9][0-9][0-9][0-9]:");
+//				String[] splits = footnameText.split("\\[[0-9][0-9][0-9][0-9]:");
+				String[] splits = footnameText.split("\\[?[0-9]*:");
+				
 				if ( splits.length > 2 ) {
 //					System.out.println("** DOUBLE **" + splits.length +":" + lastString);
+					int start0 = 0;
+					int start1 = footnameText.indexOf( splits[splits.length-2] )
+							+ splits[splits.length-2].length();
+
 					Note note = new Note(
 						lastString, 							
 						footnameText.substring(
-							footnameText.indexOf( splits[splits.length-2] )-6, 
-							footnameText.indexOf( splits[splits.length-1] )-6
+							start0, start1
 						), 
 						line
 					);
@@ -97,7 +104,7 @@ public class ParseCongress {
 					note = new Note(
 						currentString, 
 						footnameText.substring(
-							footnameText.indexOf( splits[splits.length-1] )-6
+							start1
 						), 
 						line
 					);
@@ -114,10 +121,11 @@ public class ParseCongress {
 
 		}
 	
+	    BufferedWriter bWriter = new BufferedWriter( new OutputStreamWriter(new FileOutputStream("c:/users/karl/downloads/congress.json"), Charset.forName("UTF-8")));
 		// write out json
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-	    System.out.println(writer.writeValueAsString(notes));
+		bWriter.write( writer.writeValueAsString(notes) );
 //		mapper.writeValue(new File("c:/users/karl/downloads/congress.json"), notes);
 		debugFile.close();
 	}
@@ -204,19 +212,19 @@ public class ParseCongress {
 			currentChamber = null;
 			currentString = "";
 			return true;
-		} else if ( str.equals("REPRESENTATIVES")) {
+		} else if ( str.contains("REPRESENTATIVES") && !str.contains("REPRESENTATIVES AT LARGE") && !str.contains("HOUSE OF REPRESENTATIVES") && !str.contains("—Continued")) {
 			currentChamber = new Chamber(str);
 			currentString = "";
 			return true;
-		} else if ( str.equals("SENATORS")) {
+		} else if ( str.contains("SENATORS") && !str.contains("—Continued")) {
 			currentChamber = new Chamber(str);
 			currentString = "";
 			return true;
-		} else if ( str.equals("DELEGATE")) {
+		} else if ( str.contains("DELEGATE")) {
 			currentChamber = new Chamber(str);
 			currentString = "";
 			return true;
-		} else if ( str.equals("RESIDENT COMMISSIONER")) {
+		} else if ( str.contains("RESIDENT COMMISSIONER")) {
 			currentChamber = new Chamber(str);
 			currentString = "";
 			return true;
