@@ -4,14 +4,14 @@
   <artifactId>parse-gpo-cdoc</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
           <source>1.7</source>
-          <target>1.7></target>
+          <target>1.7</target>
         </configuration>
       </plugin>
     </plugins>

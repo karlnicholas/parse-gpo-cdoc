@@ -1,12 +1,9 @@
 package congress;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,7 +121,7 @@ public class ParseCongress {
 	    BufferedWriter bWriter = new BufferedWriter( new OutputStreamWriter(new FileOutputStream("c:/users/karl/downloads/congress.json"), Charset.forName("UTF-8")));
 		// write out json
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+		ObjectWriter writer = mapper.writer(); //.withDefaultPrettyPrinter();
 		bWriter.write( writer.writeValueAsString(notes) );
 //		mapper.writeValue(new File("c:/users/karl/downloads/congress.json"), notes);
 		bWriter.close();
